@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { PaginationParams } from './types';
 
 const apiUrl: string = process.env.NEXT_PUBLIC_API_URL || 'https://mma-elo-engine-backend.onrender.com';
 
@@ -9,14 +10,6 @@ if (!apiUrl) {
 const api = axios.create({
 	baseURL: apiUrl || 'http://localhost:5050',
 });
-
-// Shared type for pagination and sorting params
-interface PaginationParams {
-	skip?: number;
-	limit?: number;
-	sort?: string;
-	order?: 'asc' | 'desc';
-}
 
 // Get all fighters
 export const getFighters = async ({

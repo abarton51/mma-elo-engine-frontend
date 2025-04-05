@@ -23,3 +23,10 @@ export interface FighterRecord {
 	fighter_name: string;
 	elo_rating: string;
 }
+
+export interface PaginationParams {
+	skip?: number;
+	limit?: number;
+	sort?: string;
+	order?: 'asc' | 'desc';
+}
