@@ -1,9 +1,5 @@
 import axios from 'axios';
 
-// Optional: You can define response interfaces here for stronger typing
-// Example:
-// interface Fighter { id: number; name: string; ... }
-
 const apiUrl: string = process.env.NEXT_PUBLIC_API_URL || 'https://mma-elo-engine-backend.onrender.com';
 
 if (!apiUrl) {
@@ -94,18 +90,3 @@ export const getEloProgressionByFighter = async (
 	}
 };
 
-// Legacy: fetch Elo records by fighter name
-export const getEloRecordsByFighter = async (
-	fighterName: string,
-	sort: 'asc' | 'desc'
-): Promise<any> => {
-	try {
-		const response = await api.get('api/elo-records/search', {
-			params: { fighter_name: fighterName, sort }
-		});
-		return response.data;
-	} catch (error) {
-		console.error('Error fetching Elo records:', error);
-		throw error;
-	}
-};

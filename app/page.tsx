@@ -1,4 +1,5 @@
 import EloProgressionByFighter from './components/EloProgressionByFighter';
+import Fighter from './components/Fighter';
 
 export default function Page() {
   return (
@@ -11,6 +12,9 @@ export default function Page() {
       </p>
       <div className="my-8">
         <EloProgressionByFighter />
+      </div>
+      <div className="my-8">
+        <Fighter />
       </div>
     </section>
   );

@@ -14,26 +14,7 @@ import {
   TooltipProps
 } from 'recharts';
 import { ValueType, NameType } from 'recharts/types/component/DefaultTooltipContent';
-
-interface EloRecord {
-  elo_record_id: number;
-  fight_number: number;
-  elo_rating: string;
-  event_name?: string;
-  event_date?: string;
-}
-
-interface FighterProgression {
-  fighter_id: number;
-  fighter_name: string;
-  total_fights: number;
-  elo_progression: EloRecord[];
-}
-
-interface FighterDropdown {
-  id: number;
-  name: string;
-}
+import { FighterProgression, EloRecord, FighterDropdown } from '../services/types';
 
 const EloProgressionByFighter: React.FC = () => {
   const [fighterName, setFighterName] = useState<string>('');
@@ -138,89 +119,91 @@ const EloProgressionByFighter: React.FC = () => {
               ))}
             </select>
           )}
-          <button className="search-button" onClick={handleSearch} disabled={loading}>
+          <button className="hover:text-sky-200 dark:hover:text-sky-200 ml-2 px-4 py-2 bg-slate-800 border border-lg text-white rounded" onClick={handleSearch} disabled={loading}>
             {loading ? 'Searching...' : 'Search'}
           </button>
         </div>
         {error && <p className="text-red-500 mt-2">{error}</p>}
       </div>
 
-      {fightersData.map((fighter) => (
-        <div key={fighter.fighter_id} className="mb-8">
-          <div className="mb-4">
-            <h3 className="text-xl font-semibold">{fighter.fighter_name}</h3>
-            <p className="text-gray-600">Total Fights: {fighter.total_fights}</p>
-          </div>
+      {
+        fightersData.map((fighter) => (
+          <div key={fighter.fighter_id} className="mb-8">
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold">{fighter.fighter_name}</h3>
+              <p className="text-gray-600">Total Fights: {fighter.total_fights}</p>
+            </div>
 
-          <div className="p-4 rounded-lg shadow bg-neutral-200 dark:bg-neutral-900">
-            <ResponsiveContainer width="100%" height={400}>
-              <LineChart
-                data={fighter.elo_progression.map((record) => ({
-                  ...record,
-                  elo: parseFloat(record.elo_rating),
-                  fight_number: record.fight_number - 1
-                }))}
-                margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
-              >
-                <CartesianGrid stroke="#4B5563" strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="fight_number"
-                  tick={{ fill: '#E5E7EB' }}
-                  label={{ value: 'Fight Number', position: 'insideBottom', offset: -5, fill: '#E5E7EB' }}
-                  stroke="#E5E7EB"
-                />
-                <YAxis
-                  domain={['auto', 'auto']}
-                  tick={{ fill: '#E5E7EB' }}
-                  label={{ value: 'Elo Rating', angle: -90, position: 'insideLeft', fill: '#E5E7EB' }}
-                  stroke="#E5E7EB"
-                />
-                <Tooltip content={<CustomTooltip />} />
-                <Legend wrapperStyle={{ color: '#E5E7EB' }} />
-                <Line
-                  type="monotone"
-                  dataKey="elo"
-                  name="Elo Rating"
-                  stroke="#1D4ED8"
-                  strokeWidth={2}
-                  dot={{ r: 4 }}
-                  activeDot={{ r: 8 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
+            <div className="p-4 rounded-lg shadow bg-neutral-200 dark:bg-neutral-900">
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart
+                  data={fighter.elo_progression.map((record) => ({
+                    ...record,
+                    elo: parseFloat(record.elo_rating),
+                    fight_number: record.fight_number - 1
+                  }))}
+                  margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
+                >
+                  <CartesianGrid stroke="#4B5563" strokeDasharray="3 3" />
+                  <XAxis
+                    dataKey="fight_number"
+                    tick={{ fill: '#E5E7EB' }}
+                    label={{ value: 'Fight Number', position: 'insideBottom', offset: -5, fill: '#E5E7EB' }}
+                    stroke="#E5E7EB"
+                  />
+                  <YAxis
+                    domain={['auto', 'auto']}
+                    tick={{ fill: '#E5E7EB' }}
+                    label={{ value: 'Elo Rating', angle: -90, position: 'insideLeft', fill: '#E5E7EB' }}
+                    stroke="#E5E7EB"
+                  />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend wrapperStyle={{ color: '#E5E7EB' }} />
+                  <Line
+                    type="monotone"
+                    dataKey="elo"
+                    name="Elo Rating"
+                    stroke="#1D4ED8"
+                    strokeWidth={2}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 8 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
 
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-900">
-                  <th className="px-4 py-2">Fight #</th>
-                  <th className="px-4 py-2">Elo Rating</th>
-                  <th className="px-4 py-2">Event</th>
-                  <th className="px-4 py-2">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fighter.elo_progression.map((record) => (
-                  <tr key={record.elo_record_id} className="border-b">
-                    <td className="px-4 py-2 text-center bg-zinc-900">{record.fight_number - 1}</td>
-                    <td className="px-4 py-2 text-center bg-zinc-900">
-                      {parseFloat(record.elo_rating).toFixed(1)}
-                    </td>
-                    <td className="px-4 py-2 bg-zinc-900">{record.event_name || '-'}</td>
-                    <td className="px-4 py-2 bg-zinc-900">
-                      {record.event_date
-                        ? new Date(record.event_date).toLocaleDateString()
-                        : '-'}
-                    </td>
+            <div className="mt-4 overflow-x-auto">
+              <table className="min-w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-900">
+                    <th className="px-4 py-2">Fight #</th>
+                    <th className="px-4 py-2">Elo Rating</th>
+                    <th className="px-4 py-2">Event</th>
+                    <th className="px-4 py-2">Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {fighter.elo_progression.map((record) => (
+                    <tr key={record.elo_record_id} className="border-b">
+                      <td className="px-4 py-2 text-center bg-zinc-900">{record.fight_number - 1}</td>
+                      <td className="px-4 py-2 text-center bg-zinc-900">
+                        {parseFloat(record.elo_rating).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 bg-zinc-900">{record.event_name || '-'}</td>
+                      <td className="px-4 py-2 bg-zinc-900">
+                        {record.event_date
+                          ? new Date(record.event_date).toLocaleDateString()
+                          : '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
+        ))
+      }
+    </div >
   );
 };
 
