@@ -82,7 +82,7 @@ const EloProgressionByFighter: React.FC = () => {
       return (
         <div className="ccustom-tooltip bg-neutral-800 text-white p-3 border border-gray-600 rounded shadow-lg">
           <p className="font-semibold">{data.fighter_name}</p>
-          <p>Fight: {data.fight_number}</p>
+          <p>Fight: {data.fight_number + 1}</p>
           <p>Elo Rating: {data.elo.toFixed(1)}</p>
           {data.event_name && <p>Event: {data.event_name}</p>}
           {data.event_date && <p>Date: {new Date(data.event_date).toLocaleDateString()}</p>}
