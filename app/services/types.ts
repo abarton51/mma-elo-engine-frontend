@@ -30,3 +30,23 @@ export interface PaginationParams {
 	sort?: string;
 	order?: 'asc' | 'desc';
 }
+
+export interface FighterEloProgressionResponse {
+	fighter_id: number;
+	fighter_name: string;
+	total_fights: number;
+	elo_progression: EloRecord[];
+}
+
+export interface FighterPaginationMeta {
+	total_count: number;
+	page: number;
+	per_page: number;
+	pages: number;
+}
+
+export interface FighterEloPaginationResponse {
+	data: FighterEloProgressionResponse[];
+	total_count: number;
+	pagination: FighterPaginationMeta;
+}

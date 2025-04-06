@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { getFightersByName } from '../services/apiService';
 import { FighterRecord } from '../services/types';
 
+const RESULTS_PER_PAGE = 10;
+
 const Fighter: React.FC = () => {
   const [fighterName, setFighterName] = useState<string>('');
   const [fighterRecords, setFighter] = useState<FighterRecord[]>([]);
@@ -18,12 +20,11 @@ const Fighter: React.FC = () => {
     setCurrentPage(page);
 
     try {
-      const skip = (page - 1) * 10;
-      const limit = 10;
+      const skip = (page - 1) * RESULTS_PER_PAGE;
 
       const records = await getFightersByName(fighterName, {
         skip,
-        limit,
+        limit: RESULTS_PER_PAGE,
         sort: 'elo_rating',
         order: 'desc',
       });
@@ -59,7 +60,10 @@ const Fighter: React.FC = () => {
           placeholder="Enter fighter name"
           className="px-3 py-2 border rounded"
         />
-        <button className="ml-2 px-4 py-2 bg-slate-800 border border-lg text-emerald rounded" onClick={() => handleSearch(1)}>
+        <button
+          className="hover:text-sky-200 dark:hover:text-sky-200 ml-2 px-4 py-2 bg-slate-800 border border-lg text-emerald rounded"
+          onClick={() => handleSearch(1)}
+        >
           Search
         </button>
 
@@ -75,21 +79,21 @@ const Fighter: React.FC = () => {
               ))}
             </ul>
 
-            <div className="pagination mt-6 flex items-center gap-4">
+            <div className="flex justify-center items-center mt-6 gap-4">
               <button
                 onClick={handlePreviousPage}
                 disabled={currentPage <= 1}
-                className="px-3 py-1 border rounded disabled:opacity-50"
-              >
+                className="px-4 py-2 rounded bg-slate-700 text-white disabled:opacity-50"
+              >                                               -
                 Previous
               </button>
-              <span>
+              <span className="text-sm text-gray-300">
                 Page {currentPage} of {totalPages}
               </span>
               <button
                 onClick={handleNextPage}
                 disabled={currentPage >= totalPages}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-4 py-2 rounded bg-slate-700 text-white disabled:opacity-50"
               >
                 Next
               </button>

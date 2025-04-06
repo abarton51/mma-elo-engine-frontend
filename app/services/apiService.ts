@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { PaginationParams } from './types';
+import { FighterEloPaginationResponse, PaginationParams } from './types';
 
 const apiUrl: string = process.env.NEXT_PUBLIC_API_URL || 'https://mma-elo-engine-backend.onrender.com';
 
@@ -70,11 +70,14 @@ export const getEvents = async (params: PaginationParams = {}): Promise<any> => 
 // Fetch Elo progression by fighter
 export const getEloProgressionByFighter = async (
 	fighterName: string,
-	sort: 'asc' | 'desc' = 'asc'
-): Promise<any> => {
+	params: PaginationParams = {},
+): Promise<FighterEloPaginationResponse> => {
 	try {
 		const response = await api.get('api/elo-records/search', {
-			params: { fighter_name: fighterName, sort }
+			params: {
+				fighter_name: fighterName,
+				...params
+			}
 		});
 		return response.data;
 	} catch (error) {
