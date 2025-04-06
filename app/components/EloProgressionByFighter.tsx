@@ -29,6 +29,15 @@ const EloProgressionByFighter: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
 
+  const [openTables, setOpenTables] = useState<{ [key: number]: boolean }>({});
+
+  const toggleTable = (fighterId: number) => {
+    setOpenTables((prev) => ({
+      ...prev,
+      [fighterId]: !prev[fighterId],
+    }));
+  };
+
   const handleSearch = async (page: number = 1) => {
     const skip = (page - 1) * RESULTS_PER_PAGE;
 
@@ -189,34 +198,43 @@ const EloProgressionByFighter: React.FC = () => {
             </ResponsiveContainer>
           </div>
 
-          <div className="mt-4 overflow-x-auto">
-            <table className="min-w-full table-auto">
-              <thead>
-                <tr className="bg-gray-900">
-                  <th className="px-4 py-2">Fight #</th>
-                  <th className="px-4 py-2">Elo Rating</th>
-                  <th className="px-4 py-2">Event</th>
-                  <th className="px-4 py-2">Date</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fighter.elo_progression.map((record) => (
-                  <tr key={record.elo_record_id} className="border-b">
-                    <td className="px-4 py-2 text-center bg-zinc-900">{record.fight_number - 1}</td>
-                    <td className="px-4 py-2 text-center bg-zinc-900">
-                      {parseFloat(record.elo_rating).toFixed(1)}
-                    </td>
-                    <td className="px-4 py-2 bg-zinc-900">{record.event_name || '-'}</td>
-                    <td className="px-4 py-2 bg-zinc-900">
-                      {record.event_date
-                        ? new Date(record.event_date).toLocaleDateString()
-                        : '-'}
-                    </td>
+          <button
+            onClick={() => toggleTable(fighter.fighter_id)}
+            className="mt-4 text-sm text-emerald-300 hover:text-emerald-100 underline"
+          >
+            {openTables[fighter.fighter_id] ? 'Hide Elo Progression Table' : 'Show Elo Progression Table'}
+          </button>
+
+          {openTables[fighter.fighter_id] && (
+            <div className="mt-4 overflow-x-auto max-h-[300px] overflow-y-auto border border-slate-700 rounded-lg">
+              <table className="min-w-full table-auto">
+                <thead>
+                  <tr className="bg-gray-900 text-white">
+                    <th className="px-4 py-2">Fight #</th>
+                    <th className="px-4 py-2">Elo Rating</th>
+                    <th className="px-4 py-2">Event</th>
+                    <th className="px-4 py-2">Date</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {fighter.elo_progression.map((record) => (
+                    <tr key={record.elo_record_id} className="border-b">
+                      <td className="px-4 py-2 text-center bg-zinc-900">{record.fight_number - 1}</td>
+                      <td className="px-4 py-2 text-center bg-zinc-900">
+                        {parseFloat(record.elo_rating).toFixed(1)}
+                      </td>
+                      <td className="px-4 py-2 bg-zinc-900">{record.event_name || '-'}</td>
+                      <td className="px-4 py-2 bg-zinc-900">
+                        {record.event_date
+                          ? new Date(record.event_date).toLocaleDateString()
+                          : '-'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       ))}
 
