@@ -130,7 +130,7 @@ const EloProgressionByFighter: React.FC = () => {
           />
           {fightersData.length > 0 && (
             <select
-              className="fighter-select"
+              className="ml-2 px-3 py-2 bg-zinc-900 text-white border border-slate-600 rounded focus:outline-none focus:ring-2 focus:ring-stone-500"
               value={selectedFighter}
               onChange={handleFighterChange}
             >
@@ -143,7 +143,7 @@ const EloProgressionByFighter: React.FC = () => {
             </select>
           )}
           <button
-            className="hover:text-sky-200 dark:hover:text-sky-200 ml-2 px-4 py-2 bg-slate-800 border border-lg text-emerald rounded"
+            className="hover:text-sky-200 dark:hover:text-sky-200 ml-2 px-4 py-2 bg-slate-800 border border-lg text-stone rounded"
             onClick={() => handleSearch(1)}
             disabled={loading}
           >
@@ -210,7 +210,7 @@ const EloProgressionByFighter: React.FC = () => {
 
           <button
             onClick={() => toggleTable(fighter.fighter_id)}
-            className="mt-4 text-sm text-emerald-300 hover:text-emerald-100 underline"
+            className="mt-4 text-sm text-stone-300 hover:text-emerald-100 underline"
           >
             {openTables[fighter.fighter_id] ? 'Hide Elo Progression Table' : 'Show Elo Progression Table'}
           </button>
