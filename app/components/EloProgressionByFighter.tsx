@@ -45,7 +45,7 @@ const EloProgressionByFighter: React.FC = () => {
       const response: FighterEloPaginationResponse = await getEloProgressionByFighter(fighterName, {
         skip,
         limit: RESULTS_PER_PAGE,
-        sort: 'desc',
+        sort: 'asc',
       });
 
       setFightersData(response.data);
