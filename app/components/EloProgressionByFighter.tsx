@@ -163,11 +163,21 @@ const EloProgressionByFighter: React.FC = () => {
           <div className="p-4 rounded-lg shadow bg-neutral-200 dark:bg-neutral-900">
             <ResponsiveContainer width="100%" height={400}>
               <LineChart
-                data={fighter.elo_progression.map((record) => ({
-                  ...record,
-                  elo: parseFloat(record.elo_rating),
-                  fight_number: record.fight_number - 1
-                }))}
+                data={[
+                  {
+                    elo: 1000,
+                    fight_number: 0,
+                    fighter_name: fighter.fighter_name,
+                    event_name: 'Initial Rating',
+                    event_date: null,
+                    elo_record_id: -1
+                  },
+                  ...fighter.elo_progression.map((record) => ({
+                    ...record,
+                    elo: parseFloat(record.elo_rating),
+                    fight_number: record.fight_number
+                  }))
+                ]}
                 margin={{ top: 10, right: 30, left: 20, bottom: 30 }}
               >
                 <CartesianGrid stroke="#4B5563" strokeDasharray="3 3" />
@@ -207,24 +217,28 @@ const EloProgressionByFighter: React.FC = () => {
 
           {openTables[fighter.fighter_id] && (
             <div className="mt-4 overflow-x-auto max-h-[300px] overflow-y-auto border border-slate-700 rounded-lg">
-              <table className="min-w-full table-auto">
+              <table className="min-w-full table-auto text-sm">
                 <thead>
                   <tr className="bg-gray-900 text-white">
-                    <th className="px-4 py-2">Fight #</th>
-                    <th className="px-4 py-2">Elo Rating</th>
-                    <th className="px-4 py-2">Event</th>
-                    <th className="px-4 py-2">Date</th>
+                    <th className="px-2 py-1">Fight #</th>
+                    <th className="px-2 py-1">Elo Rating</th>
+                    <th className="px-2 py-1">Event</th>
+                    <th className="px-2 py-1">Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {fighter.elo_progression.map((record) => (
                     <tr key={record.elo_record_id} className="border-b">
-                      <td className="px-4 py-2 text-center bg-zinc-900">{record.fight_number - 1}</td>
-                      <td className="px-4 py-2 text-center bg-zinc-900">
+                      <td
+                        className="px-2 py-1 text-center bg-zinc-900"
+                      >
+                        {record.fight_number}
+                      </td>
+                      <td className="px-2 py-1 text-center bg-zinc-900">
                         {parseFloat(record.elo_rating).toFixed(1)}
                       </td>
-                      <td className="px-4 py-2 bg-zinc-900">{record.event_name || '-'}</td>
-                      <td className="px-4 py-2 bg-zinc-900">
+                      <td className="px-2 py-1 bg-zinc-900">{record.event_name || '-'}</td>
+                      <td className="px-2 py-1 bg-zinc-900">
                         {record.event_date
                           ? new Date(record.event_date).toLocaleDateString()
                           : '-'}
